@@ -9,5 +9,5 @@ configureAWS();
 createInstance().then( data => {
   console.log(`Ec2 instance (${ data.instanceId }) created and asocciated to this public ip: ${ data.publicIp }`);
   executeScript(`/home/deployme/scripts/createDockerFile.sh ${gitUrl} ${ getProjectName(gitUrl) }`);
-  
+  executeScript(`/home/deployme/scripts/deploy.sh ${data.publicIp}`);
 })
