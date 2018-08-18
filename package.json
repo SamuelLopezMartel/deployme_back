@@ -1,0 +1,17 @@
+{
+  "name": "proyecto-final",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "deployme-team",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.292.0",
+    "child_process": "^1.0.2",
+    "express": "^4.16.3",
+    "uuid": "^3.3.2"
+  }
+}
