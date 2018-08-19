@@ -1,6 +1,6 @@
 const { createInstance } = require('../aws/createInstance');
-const { executeScript } = require('./src/tools/scriptsExecuter');
-const { getProjectName } = require('./src/tools/getProjectName');
+const { executeScript } = require('./scriptsExecuter');
+const { getProjectName } = require('./getProjectName');
 
 // Project to test 
 const gitUrl = 'https://github.com/sakdev/TheFox.git';
