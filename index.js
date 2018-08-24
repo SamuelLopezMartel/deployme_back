@@ -3,7 +3,6 @@ const app = require('express')();
 const bodyParser = require('body-parser');
 const { configureAWS } = require('./src/aws/configureAWS');
 const router = require('./api');
-
 configureAWS();
 
 app.use(cors());

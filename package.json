@@ -12,6 +12,7 @@
     "aws-sdk": "^2.292.0",
     "body-parser": "^1.18.3",
     "child_process": "^1.0.2",
+    "connect-timeout": "^1.9.0",
     "cors": "^2.8.4",
     "express": "^4.16.3",
     "fs": "0.0.1-security",
