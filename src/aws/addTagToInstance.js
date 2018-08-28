@@ -6,7 +6,7 @@ const tagParameters = (instanceId) => (
         Tags: [
             {
                 Key: 'Name',
-                Value: 'DeployMe test'
+                Value: 'DeployMe client'
             }
         ]
     }

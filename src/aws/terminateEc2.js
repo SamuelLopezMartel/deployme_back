@@ -1,19 +1,22 @@
 const { ec2 } = require('./configureAWS')
-module.exports.terminateInstance = (instanceId) => {
+const { releaseAddress } = require('./releasesElasticIp');
+module.exports.terminateInstance = (instanceId, allocationId) => {
     return new Promise ( (resolve , reject ) => {
-        const params = {
-            InstanceIds: [
-               instanceId
-            ]
-        };
-        ec2().terminateInstances(params, ( err , data ) => {
-            if ( err ){
-                console.log( 'Fail terminate instance ' , err , err.stack )
-                reject();
-            }else {
-                console.log('Sucessfull terminate instace ' , data )
-                resolve();
-            }
-        })
+        releaseAddress(allocationId).then(response =>{
+            const params = {
+                InstanceIds: [
+                   instanceId
+                ]
+            };
+            ec2().terminateInstances(params, ( err , data ) => {
+                if ( err ){
+                    reject(err);
+                }else {
+                    resolve();
+                }
+            })
+        }).catch(err => {
+            reject(err);
+        })        
     })
 }

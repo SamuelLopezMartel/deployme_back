@@ -32,12 +32,12 @@ module.exports.deployClientProject = (gitUrl) => {
 
 function deploy(publicIp){
   return new Promise(( resolve , reject ) => {
-    if( shell.exec(`ssh -tt -i /home/deployme/private/deploymepairkeys.pem -t -o "StrictHostKeyChecking no" ubuntu@${publicIp} "exit; bash -l"`).code !== 0){
+    if( shell.exec(`ssh -tt -i /home/deployme/private/eoisamuel.pem -t -o "StrictHostKeyChecking no" ubuntu@${publicIp} "exit; bash -l"`).code !== 0){
       console.log('Primer script')
       shell.exit(1);
       reject();            
     }else{
-      if( shell.exec(`scp -i /home/deployme/private/deploymepairkeys.pem setup-files.tar.gz ubuntu@${publicIp}:/tmp`).code !== 0){
+      if( shell.exec(`scp -i /home/deployme/private/eoisamuel.pem setup-files.tar.gz ubuntu@${publicIp}:/tmp`).code !== 0){
         shell.exit(1);
         console.log('Primer script')
         reject();

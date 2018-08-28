@@ -16,7 +16,7 @@ module.exports.remoteExecuter = (publicIp, commands) => {
 const connection_options = () => ( {
     port: 22,
     username: 'ubuntu',
-    privateKey: require('fs').readFileSync('./private/deploymepairkeys.pem'),
+    privateKey: require('fs').readFileSync('./private/eoisamuel.pem'),
     passphrase: ''
  });
                     
