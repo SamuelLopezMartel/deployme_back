@@ -8,9 +8,8 @@ module.exports.deployClientProject = (gitUrl) => {
   return new Promise( (resolve, reject) => {
     createInstance().then( data => {
       const allPromises = [
-        executeScript(`/home/deployme/scripts/createDockerFile.sh ${gitUrl} ${ getProjectName(gitUrl) }`),
         executeScript(`/home/deployme/scripts/compressFiles.sh`),
-        deploy(data.publicIp)
+        deploy(data.publicIp, gitUrl)
       ]
       Promise.all(allPromises).then(() => {
         console.log(`Ec2 instance (${ data.instanceId }) created and asocciated to this public ip: ${ data.publicIp }`);
@@ -30,7 +29,7 @@ module.exports.deployClientProject = (gitUrl) => {
   });
 }
 
-function deploy(publicIp){
+function deploy(publicIp, gitUrl){
   return new Promise(( resolve , reject ) => {
     if( shell.exec(`ssh -tt -i /home/deployme/private/eoisamuel.pem -t -o "StrictHostKeyChecking no" ubuntu@${publicIp} "exit; bash -l"`).code !== 0){
       console.log('Primer script')
@@ -49,7 +48,7 @@ function deploy(publicIp){
           'sudo apt update',
           'rm /tmp/setup-files.tar.gz',
           'sudo apt install docker.io -y',
-          'sudo docker build -t image-front ./client-setup-files/',
+          `sudo docker build --build-arg rute_git=${gitUrl} --build-arg name_file_git=${getProjectName(gitUrl)} -t image-front ./client-setup-files/`,
           'sudo docker run -d -p 80:80 image-front',
           'exit'
         ];
