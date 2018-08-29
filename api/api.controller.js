@@ -4,18 +4,16 @@ const { terminateInstance } = require('../src/aws/terminateEc2')
 module.exports = { getFrontUrl, getBackUrl, terminateProject }
 
 function getFrontUrl(req, res) {
-    const urlfront = req.body.urlfront;
-    console.log("Starting deploy of: " + urlfront);
-    deployClientProject(urlfront).then( (instanceData) => {
+    deployClientProject(req.body.urlfront, req.body.technology).then( (instanceData) => {
         res.json(instanceData);
     }).catch(error => {
-        res.code(500).send("An error has occurred deploying your project")
+        res.send("An error has occurred deploying your project: ", error);
     });
 }
 
 function getBackUrl(req, res) {
     const urlback = req.body.urlback;
-    console.log("Deploying back in: " + urlback);
+    console.log("Starting deploy of: " + urlback + " - " + req.body.technology);
     res.send("Deploying back in: " + urlback);
 }
 

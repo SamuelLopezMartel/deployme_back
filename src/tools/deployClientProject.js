@@ -4,10 +4,13 @@ const { executeScript } = require('./scriptsExecuter');
 const { remoteExecuter } = require('./remoteExecuter')
 const shell = require('shelljs');
 
-module.exports.deployClientProject = (gitUrl) => {
+module.exports.deployClientProject = (gitUrl, technology) => {
   return new Promise( (resolve, reject) => {
+    console.log("tech: ", technology);
     createInstance().then( data => {
       const allPromises = [
+        chooseDockerfileCreator(technology, gitUrl),
+        //executeScript(`/home/deployme/scripts/createDockerFile.sh ${gitUrl} ${getProjectName(gitUrl)}`),
         executeScript(`/home/deployme/scripts/compressFiles.sh`),
         deploy(data.publicIp, gitUrl)
       ]
@@ -22,14 +25,36 @@ module.exports.deployClientProject = (gitUrl) => {
         }
         resolve(dataResolve);        
       }).catch(error => {
-        console.log('Posible error ', error )
-        reject();
+        reject(error);
       })
     })
   });
 }
 
+function chooseDockerfileCreator(technology, gitUrl){
+  console.log(gitUrl);
+  switch(technology){
+    case "estatica":
+      console.log("entra en estatica");
+      executeScript(`/home/deployme/scripts/createDockerFile.sh ${gitUrl} ${getProjectName(gitUrl)}`)
+      return 
+    case "webpack":
+      console.log("entra en webpack");
+      return executeScript(`/home/deployme/scripts/createwebpack.sh ${gitUrl} ${getProjectName(gitUrl)}`)      
+    case "node":
+      return executeScript(`/home/deployme/scripts/createnode.sh ${gitUrl} ${getProjectName(gitUrl)}`) 
+    case "php":
+      return executeScript(`/home/deployme/scripts/createphp.sh ${gitUrl} ${getProjectName(gitUrl)}`)
+    default: 
+      console("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!tecnologia invalida");
+      break;    
+  }
+  
+}
+
+
 function deploy(publicIp, gitUrl){
+  console.log("llego a deploy");
   return new Promise(( resolve , reject ) => {
     if( shell.exec(`ssh -tt -i /home/deployme/private/eoisamuel.pem -t -o "StrictHostKeyChecking no" ubuntu@${publicIp} "exit; bash -l"`).code !== 0){
       console.log('Primer script')
@@ -48,7 +73,9 @@ function deploy(publicIp, gitUrl){
           'sudo apt update',
           'rm /tmp/setup-files.tar.gz',
           'sudo apt install docker.io -y',
-          `sudo docker build --build-arg rute_git=${gitUrl} --build-arg name_file_git=${getProjectName(gitUrl)} -t image-front ./client-setup-files/`,
+          'ls ./client-setup-files/',
+          'pwd',
+          `sudo docker build -t image-front ./client-setup-files/`,
           'sudo docker run -d -p 80:80 image-front',
           'exit'
         ];

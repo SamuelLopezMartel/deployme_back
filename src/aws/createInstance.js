@@ -27,12 +27,13 @@ module.exports.createInstance = () => {
                 associateElasticIp(dataEc2).then(() => {
                     resolve(dataEc2);
                 }).catch(error => {
-                    reject();
+                    reject(error);
                 })
             }).catch(err => {
-                console.log('Failed in: ', err);
-                reject();
+                reject(err);
             })
+        }).catch(err => {
+            reject(err);
         })
     })
 } 
